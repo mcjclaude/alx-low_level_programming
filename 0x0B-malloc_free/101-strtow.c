@@ -1,100 +1,112 @@
-/*
- * File: 101-strtow.c
- * Auth: Timothy Victor
- */
-
 #include "main.h"
 
 /**
- * alloc - allocates space in memory for an array
- * @str: string
- * @len: length of string
- * @size: size of array
- *
- * Return: a pointer to the array or null if allocation was unsucessful
+ * _strlen - find length of a string
+ * @s: string
+ * Return: int
  */
-char **alloc(char *str, int len, int size)
+
+
+int _strlen(char *s)
 {
-	int i, j, wide;
-	char **a, before;
-
-	a = malloc((size + 1) * sizeof(char *));
-	before = ' ';
-
-	for (i = 0; i < size; i++)
-	{
-		while (j < len)
-		{
-			if (str[j] == ' ' && before != ' ')
-			{
-				before = ' ';
-				j++;
-				break;
-			}
-			if (str[j] != ' ')
-				wide++;
-			before = str[j];
-			j++;
-		}
-
-		a[i] = malloc((wide + 1) * sizeof(char));
-		if (a[i] == NULL)
-		{
-			return (NULL);
-		}
-		wide = 0;
-	}
-	a[size] = NULL;
-
-	return (a);
+int size = 0;
+for (; s[size] != '\0'; size++)
+;
+return (size);
 }
 
 /**
- * strtow - splits a string into words
- * @str: the string to split
- *
- * Return: a pointer to an array of strings or NULL if error
+ * *str_concat - concatenates two strings
+ * @s1: string 1
+ * @s2: string 2
+ * Return: pointer
  */
+
+char *str_addChar (char *str, char c)
+{
+int size, i;
+char *m;
+
+size = _strlen(str);
+
+m = malloc((size + 1) * sizeof(char) + 1);
+if (m == 0)
+	return (0);
+
+for (i = 0; i <= size; i++)
+	m[i] = str[i];
+
+m[i + 1] = c;
+m[i + 2] = '\0';
+
+return (m);
+}
+
+
+/**
+ * *nbr_spaces - return the number of occurent of a string
+ * @s: string to check
+ * Return: int
+ */
+
+unsigned int nbr_spaces(char *s)
+{
+	int i, cmpt = 0;
+
+	for (i = 0; s[i + 1] != '\0'; i++)
+	{
+		if (s[i]  == ' ' && s[i + 1] != ' ')
+			cmpt++;
+	}
+
+	return (cmpt + 1);
+}
+
+
+/**
+  *strtow - split a sentence into multiple words.
+  *@str: the string passed as argument.
+  *Return: tokens
+  */
 char **strtow(char *str)
 {
-	char **a, before = ' ';
-	int i, j = 0, k = 0, c = 0, len, size = 0;
+int i;
+int spaces = nbr_spaces(str);
+char **tokens = NULL;//malloc(sizeof(char *) * (spaces));
+char *token;
+int checkingSpace = 0;
+int word = 0;
 
-	if (str == NULL || strlen(str) == 0)
-		return (NULL);
-	len = strlen(str);
-	for (i = 0; i < len; i++)
+if (!tokens)
+{
+	printf("Failed");
+	return (0);
+}
+	
+
+printf("looping");
+for (i = 0; str[i] != '\0'; i++)
+{
+	if (str[i] == ' ')
 	{
-		if (str[i] != ' ')
-			c = 1;
-		if (str[i] != ' ' && before == ' ')
-			size++;
-		before = str[i];
-	}
-	a = alloc(str, len, size);
-	if (a == NULL || c == 0)
-		return (NULL);
-	before = ' ';
-	for (i = 0; i < size; i++)
-	{
-		while (j < len)
+		if (checkingSpace == 0)
 		{
-			if (str[j] == ' ' && before != ' ')
-			{
-				before = ' ';
-				j++;
-				break;
-			}
-			if (str[j] != ' ')
-			{
-				a[i][k] = str[j];
-				k++;
-			}
-			before = str[j];
-			j++;
-		}
-		a[i][k] = '\0';
-		k = 0;
+			word++;
+			checkingSpace = 1;
+		} 
 	}
-	return (a);
+	else
+	{
+		printf("1");
+		token = tokens[word];
+		free(tokens[word]);
+		str_addChar(token, str[i]);
+		checkingSpace = 0;
+	}
+
+}
+
+tokens[i] = NULL;
+
+return (tokens);
 }
